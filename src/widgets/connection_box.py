@@ -1,4 +1,4 @@
-from src.functions.config import get_network_command
+from src.functions.config import get_bluetooth_command, get_network_command
 import gi
 
 gi.require_version('Gtk', '3.0')
@@ -86,18 +86,19 @@ class ConnectionsBox(Gtk.Box):
         net_name_conn_box.pack_start(network_device_box, False, True, 0)
         net_name_conn_box.pack_start(network_name_box, False, True, 0)
 
-        wrap_networn_button_box = Gtk.Box(
+        # Using a box to package network_icon and net_name_conn_box into network_button
+        network_button_box = Gtk.Box(
             orientation=Gtk.Orientation.HORIZONTAL, spacing=0
         )
 
         network_button = Gtk.Button()
         network_button.set_always_show_image(True)
-        network_button.connect("clicked", self.do_open_connman)
+        network_button.connect("clicked", self.do_execute_network_command)
         network_button.get_style_context().add_class("widgetbutton")
 
-        wrap_networn_button_box.pack_start(network_icon, False, True, 0)
-        wrap_networn_button_box.pack_start(net_name_conn_box, False, True, 10)
-        network_button.add(wrap_networn_button_box)
+        network_button_box.pack_start(network_icon, False, True, 0)
+        network_button_box.pack_start(net_name_conn_box, False, True, 10)
+        network_button.add(network_button_box)
 
         network_box.pack_start(network_button, False, True, 0)
 
@@ -152,8 +153,22 @@ class ConnectionsBox(Gtk.Box):
         bluetooth_conn_box.pack_start(bluetooth_device_box, False, True, 0)
         bluetooth_conn_box.pack_start(bluetooth_name_box, False, True, 0)
 
-        bluetooth_box.pack_start(bluetooth_icon, False, True, 10)
-        bluetooth_box.pack_start(bluetooth_conn_box, False, True, 0)
+        # Using a box to package bluetooth_name_box and bluetooth_icon into bluetooth_button
+        bluetooth_button = Gtk.Button()
+        bluetooth_button.set_always_show_image(True)
+        bluetooth_button.connect('clicked', self.do_execute_bluetooth_command)
+        bluetooth_button.get_style_context().add_class('widgetbutton')
+
+        bluetooth_button_box = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL, spacing=0
+        )
+        bluetooth_button_box.pack_start(bluetooth_icon, False, True, 0)
+        bluetooth_button_box.pack_start(bluetooth_conn_box, False, True, 10)
+
+        bluetooth_button.add(bluetooth_button_box)
+
+        bluetooth_box.pack_start(bluetooth_button, False, True, 0)
+
         return bluetooth_box
 
     def init_airplane_box(self):
@@ -194,12 +209,22 @@ class ConnectionsBox(Gtk.Box):
         airplane_box.pack_start(airplane_conn_box, False, True, 0)
         return airplane_box
 
-    def do_open_connman(self, event):
+    def do_execute_network_command(self, event):
         try:
             network_command = get_network_command()
             network_exe_command = """/bin/bash -c '{0}'"""
             GLib.spawn_command_line_async(
                 network_exe_command.format(network_command)
+            )
+        except Exception:
+            print("Error...")
+
+    def do_execute_bluetooth_command(self, event):
+        try:
+            bluetooth_command = get_bluetooth_command()
+            bluetooth_exe_command = """/bin/bash -c '{0}'"""
+            GLib.spawn_command_line_async(
+                bluetooth_exe_command.format(bluetooth_command)
             )
         except Exception:
             print("Error...")
