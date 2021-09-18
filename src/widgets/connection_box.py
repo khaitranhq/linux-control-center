@@ -2,9 +2,9 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
-from comicecontrolcenter.functions.network_information import NetworkInformation
-from comicecontrolcenter.functions.bluetooth_information import BluetoothInformation
-from comicecontrolcenter.functions.airplane_mode import AirPlaneInformation
+from src.functions.network_information import NetworkInformation
+from src.functions.bluetooth_information import BluetoothInformation
+from src.functions.airplane_mode import AirPlaneInformation
 
 
 class ConnectionsBox(Gtk.Box):

@@ -6,24 +6,22 @@
 """
 import os
 import gi
+
 gi.require_version('Gtk', '3.0')
-from gi.repository import GLib
 
 
 class DoNotDisturbInformation():
-    
     def __init__(self):
         super().__init__()
         self.state = None
-        
+
         command = """gsettings get org.gnome.desktop.notifications show-banners"""
         result = os.popen(command).read()
-        
+
         if result.strip() == "false":
             self.state = True
         else:
             self.state = False
-    
+
     def get_state(self):
         return self.state
-
