@@ -1,3 +1,4 @@
+from src.functions.config import get_network_command
 import gi
 
 gi.require_version('Gtk', '3.0')
@@ -13,7 +14,25 @@ class ConnectionsBox(Gtk.Box):
         super().__init__()
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
 
-        # Network (WiFi or Ethernet) - icon with labels
+        # This separator fix the box width
+        fix_separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+        fix_separator.set_opacity(0.0)
+        fix_separator.set_size_request(120, 1)
+
+        # Finally all baxes are packaged
+        network_box = self.init_network_box()
+        bluetooth_box = self.init_bluetooth_box()
+        airplane_box = self.init_airplane_box()
+
+        main_box.pack_start(network_box, False, True, 10)
+        main_box.pack_start(fix_separator, True, True, 0)
+        main_box.pack_start(bluetooth_box, True, True, 0)
+        main_box.pack_start(airplane_box, True, True, 10)
+
+        self.pack_start(main_box, True, True, 0)
+        self.get_style_context().add_class("styledwidgetbox")
+
+    def init_network_box(self):
         network = NetworkInformation()
         network_status = ""
 
@@ -82,7 +101,9 @@ class ConnectionsBox(Gtk.Box):
 
         network_box.pack_start(network_button, False, True, 0)
 
-        # Bluetooth icon
+        return network_box
+
+    def init_bluetooth_box(self):
         bluetooth = BluetoothInformation()
         bluetooth_status = ""
 
@@ -133,8 +154,9 @@ class ConnectionsBox(Gtk.Box):
 
         bluetooth_box.pack_start(bluetooth_icon, False, True, 10)
         bluetooth_box.pack_start(bluetooth_conn_box, False, True, 0)
+        return bluetooth_box
 
-        # AirPlane Mode icon
+    def init_airplane_box(self):
         airplane = AirPlaneInformation()
         airplane_status = ""
 
@@ -170,25 +192,14 @@ class ConnectionsBox(Gtk.Box):
 
         airplane_box.pack_start(airplane_icon, False, True, 10)
         airplane_box.pack_start(airplane_conn_box, False, True, 0)
-
-        # This separator fix the box width
-        fix_separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-        fix_separator.set_opacity(0.0)
-        fix_separator.set_size_request(120, 1)
-
-        # Finally all baxes are packaged
-        main_box.pack_start(network_box, False, True, 10)
-        main_box.pack_start(fix_separator, True, True, 0)
-        main_box.pack_start(bluetooth_box, True, True, 0)
-        main_box.pack_start(airplane_box, True, True, 10)
-
-        self.pack_start(main_box, True, True, 0)
-        self.get_style_context().add_class("styledwidgetbox")
+        return airplane_box
 
     def do_open_connman(self, event):
         try:
+            network_command = get_network_command()
+            network_exe_command = """/bin/bash -c '{0}'"""
             GLib.spawn_command_line_async(
-                """/bin/bash -c '/usr/bin/connman-gtk'"""
+                network_exe_command.format(network_command)
             )
         except Exception:
             print("Error...")

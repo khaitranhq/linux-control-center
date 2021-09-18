@@ -25,7 +25,6 @@ class BluetoothInformation():
                 for path in mngd_objs:
                     con_state = mngd_objs[path].get('org.bluez.Device1', {}
                                                     ).get('Connected', False)
-                    print(con_state)
                     if con_state:
                         self.name = mngd_objs[path].get(
                             'org.bluez.Device1', {}
