@@ -11,7 +11,10 @@ class BluetoothInformation():
         self.name = ""
         if self.device_exist():
             self.exist = True
-            command = """cat /sys/class/bluetooth/hci0/rfkill0/state"""
+            rfkill_bluetooth_id_command = """rfkill | grep 'bluetooth' | awk '{print $1}' """
+            rfkill_bluetooth_id = os.popen(rfkill_bluetooth_id_command).read()
+
+            command = """cat /sys/class/bluetooth/hci0/rfkill{0}/state""".format(rfkill_bluetooth_id[:-1])
             result = os.popen(command).read()
             powered_on = int(result)
             if powered_on > 0:
