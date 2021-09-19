@@ -1,7 +1,7 @@
 # Control center
 A simply control center to monitor connections such as WiFi, Bluetooth, etc. And Monitor brightness level and sound volume.
 
-This is a fork of [comice-control-center](https://github.com/libredeb/comice-control-center)
+This repository is a fork of [comice-control-center](https://github.com/libredeb/comice-control-center)
 
 ## Screenshot
 ![Screenshot](https://raw.githubusercontent.com/libredeb/comice-control-center/main/screenshots/screenshot.png)
