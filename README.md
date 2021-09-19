@@ -26,3 +26,4 @@ sudo pip3 install -r requirements.txt
 ```bash
 ./control-center
 ```
+You can learn how to add control center to XFCE [here](https://youtu.be/uvvoJU69uNo?t=2179)
